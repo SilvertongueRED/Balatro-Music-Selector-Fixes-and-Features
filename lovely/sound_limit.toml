@@ -1,0 +1,85 @@
+# Music Selector - "one soundtrack at a time" speed fix
+#
+# Problem: the game starts every registered music track at the same time (all soundtracks of all your mods, 80+).
+# The audio system only has 64 voices, so many soundtracks started late or stayed silent until you changed menu
+# tab and picked them again.
+#
+# Fix: the game tells the audio thread which tracks belong to the soundtrack that should play
+# (see MUSEL_GET_GROUP in main.lua), and the audio thread only starts those. Tracks of a soundtrack you switched
+# away from are stopped as soon as they have faded out.
+#
+# If anything ever misbehaves, delete this file: everything goes back to the old behaviour.
+
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 5
+
+# MAIN THREAD: attach the "tracks that belong together" list to every audio message.
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = 'G.SOUND_MANAGER.channel:push(G.ARGS.push)'
+match_indent = true
+position = 'before'
+payload = '''G.ARGS.push.music_group = MUSEL_GET_GROUP and MUSEL_GET_GROUP(desired_track) or nil'''
+
+# AUDIO THREAD: only (re)start the tracks of the wanted soundtrack.
+[[patches]]
+[patches.pattern]
+target = 'engine/sound_manager.lua'
+pattern = 'function RESTART_MUSIC(args)'
+match_indent = true
+position = 'at'
+payload = '''function RESTART_MUSIC(args)
+    local group = args and args.music_group
+    if group then MUSEL_GROUP = group end
+    for k, v in pairs(SOURCES) do
+        if string.find(k,'music') then
+            if (not group) or group[k] then
+                for i, s in ipairs(v) do
+                    s.sound:stop()
+                end
+                SOURCES[k] = {}
+                args.per = 0.7
+                args.vol = 0.6
+                args.sound_code = k
+                local s = PLAY_SOUND(args)
+                s.initialized = true
+            else
+                -- not part of the wanted soundtrack: leave it alone only while it is still audible (fading out)
+                for i, s in ipairs(v) do
+                    if not (s.current_volume and s.current_volume > 0.05) then s.sound:stop() end
+                end
+            end
+        end
+    end
+end
+
+function RESTART_MUSIC_VANILLA(args)'''
+
+# AUDIO THREAD: free the voices of faded-out tracks that are not part of the wanted soundtrack.
+[[patches]]
+[patches.pattern]
+target = 'engine/sound_manager.lua'
+pattern = 'function MODULATE(args)'
+match_indent = true
+position = 'at'
+payload = '''function MODULATE(args)
+    local group = args.music_group
+    if group then
+        MUSEL_GROUP = group
+        for k, v in pairs(SOURCES) do
+            if string.find(k,'music') and not group[k] then
+                for i, s in ipairs(v) do
+                    if s.sound and s.sound:isPlaying() and s.current_volume and s.current_volume < 0.02 then
+                        s.sound:stop()
+                    end
+                end
+            end
+        end
+    end
+    return MODULATE_VANILLA(args)
+end
+
+function MODULATE_VANILLA(args)'''
