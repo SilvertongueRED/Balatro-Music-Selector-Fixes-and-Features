@@ -1,15 +1,15 @@
 {
     "id": "musicselector",
     "name": "Music Selector",
-    "author": ["DZ-Aladan", "BarrierTrio", "WiN'ter"],
-    "description": "A music selector obtained by taking parts of the Cardsauce mod code",
+    "author": ["DZ-Aladan", "BarrierTrio", "WiN'ter", "SilvertongueRED"],
+    "description": "Standalone music selector for Balatro with additional soundtracks, fixes, and menu compatibility with Colour/Main Menu Theme Selector.",
     "prefix": "musel",
     "main_file": "main.lua",
     "priority": 900000,
     "badge_colour": "ca5bc7",
     "badge_text_colour": "FFFFFF",
     "display_name": "Music Selector",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "dependencies": [
         "Steamodded (>=1.0.0~ALPHA-1404b)"
     ]
