@@ -1,5 +1,5 @@
 # Balatro Music Selector
-Standalone Cardsauce music selector for Balatro
+Standalone music selector for Balatro with additional soundtracks, fixes, and menu compatibility with Colour/Main Menu Theme Selector.
 
 # DISCLAIMER
 I'm NOT a programmer, I helped myself with templates/guides and I tried my best to understand the code because I'm trying to learn Lua in my own way. A lot of the code in this mod comes from [Cardsauce](https://github.com/BarrierTrio/Cardsauce/). Please, support [the original devs](https://github.com/BarrierTrio).
@@ -74,7 +74,7 @@ The mod allows to [add custom music](#how-to-add-your-own-music) as well.
 <sup>🔧 Otherwise, being able to at least override its music selector with this one.</sup>
 
 
-## 1.2.0 - Slowed Down Bonne Soirée + faster soundtrack switching
+## 1.2.1 - Slowed Down Bonne Soirée + faster soundtrack switching
 - New soundtrack option: **Bonne Soirée (Slowed Down) - Vongola** (the same audio as Bonne Soirée, played at 0.7 speed/pitch; reuses the existing audio files, so no extra disk space).
 - Speed fix: the game used to start every music track of every mod at once (80+), but only 64 sounds can play at the same time, so many soundtracks were slow to start or silent until you changed menu tab and chose again. `lovely/sound_limit.toml` now makes the game start only the tracks of the soundtrack that is playing. (Delete that one file to go back to the old behaviour.)
 - The Soundtrack cycler's callback is now re-applied after the Audio tab is built, so another mod can no longer take it over.
