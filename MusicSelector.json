@@ -2,7 +2,7 @@
     "id": "musicselector",
     "name": "Music Selector",
     "author": ["DZ-Aladan", "BarrierTrio", "WiN'ter", "SilvertongueRED"],
-    "description": "Standalone music selector for Balatro with additional soundtracks, fixes, and menu compatibility with Colour/Main Menu Theme Selector.",
+    "description": "Standalone music selector for Balatro with additional soundtracks, fixes, and improved compatibility with other mods that edit the settings menu.",
     "prefix": "musel",
     "main_file": "main.lua",
     "priority": 900000,

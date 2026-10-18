@@ -1,5 +1,5 @@
 # Balatro Music Selector
-Standalone music selector for Balatro with additional soundtracks, fixes, and menu compatibility with Colour/Main Menu Theme Selector.
+Standalone music selector for Balatro with additional soundtracks, fixes, and improved compatibility with other mods that edit the settings menu.
 
 # DISCLAIMER
 I'm NOT a programmer, I helped myself with templates/guides and I tried my best to understand the code because I'm trying to learn Lua in my own way. A lot of the code in this mod comes from [Cardsauce](https://github.com/BarrierTrio/Cardsauce/). Please, support [the original devs](https://github.com/BarrierTrio).
