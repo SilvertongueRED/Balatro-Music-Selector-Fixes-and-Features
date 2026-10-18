@@ -98,23 +98,72 @@ do = closes the loop statement. Everything beyond this, up to "end", will run in
 end -- This ends the loop.
 
 -- GRAB BAG OST (hooked in) ---------------------------------------------------------------------
--- Grab Bag ships its own soundtrack (5 tracks, made by ViperDemon) and plays it whenever Grab Bag's own
--- "Custom Music" checkbox is on, no matter which soundtrack is picked here. That overrode every soundtrack of this mod.
+-- Grab Bag ships its own soundtrack (5 tracks, made by ViperDemon). With Grab Bag's "Custom Music" checkbox on it plays
+-- them no matter which soundtrack is picked here, which overrode every soundtrack of this mod.
 -- Instead of copying its audio, we list it as an option and only let its tracks play while it is the selected one.
--- The option only appears when Grab Bag is installed and its Custom Music setting is on (otherwise it has no tracks).
+--   * Custom Music ON in Grab Bag: Grab Bag registered the tracks itself, so we wrap its rules (silent unless selected).
+--   * Custom Music OFF in Grab Bag: Grab Bag registers nothing (so the old check found no tracks and the option never
+--     showed up). We register the same five files straight from Grab Bag's folder, with Grab Bag's own rules, and only
+--     while "Grab Bag OST" is selected. Nothing is copied.
+-- Either way the option only appears when Grab Bag is installed and enabled.
 if not cardsauce_detected then
  local grabbag_tracks = {}
- for _, track_key in ipairs(SMODS.Sound.obj_buffer) do
-  local snd = SMODS.Sounds[track_key]
-  if type(track_key) == 'string' and string.find(track_key, 'music') and snd and snd.mod and snd.mod.id == 'GrabBag'
-   and type(snd.select_music_track) == 'function' and not snd.musel_gated then
-   local original_select = snd.select_music_track
-   snd.select_music_track = function(self, ...)
-    if G.SETTINGS.music_selection ~= 'grabbag' then return false end -- not picked here: stay silent
-    return original_select(self, ...) -- picked: Grab Bag's own rules (menu, packs, shop, boss)
+ local grabbag_mod = SMODS.find_mod and SMODS.find_mod('GrabBag')[1]
+ if grabbag_mod then
+  for _, track_key in ipairs(SMODS.Sound.obj_buffer) do
+   local snd = SMODS.Sounds[track_key]
+   if type(track_key) == 'string' and string.find(track_key, 'music') and snd and snd.mod and snd.mod.id == 'GrabBag'
+    and type(snd.select_music_track) == 'function' and not snd.musel_gated then
+    local original_select = snd.select_music_track
+    snd.select_music_track = function(self, ...)
+     if G.SETTINGS.music_selection ~= 'grabbag' then return false end -- not picked here: stay silent
+     return original_select(self, ...) -- picked: Grab Bag's own rules (menu, packs, shop, boss)
+    end
+    snd.musel_gated = true
+    grabbag_tracks[#grabbag_tracks + 1] = track_key
    end
-   snd.musel_gated = true
-   grabbag_tracks[#grabbag_tracks + 1] = track_key
+  end
+
+  if #grabbag_tracks == 0 and grabbag_mod.path then -- Custom Music is off in Grab Bag: register its files ourselves
+   local gb_path = grabbag_mod.path
+   local function gb_file_exists(name)
+    local f = io.open(gb_path .. 'assets/sounds/' .. name, 'rb')
+    if f then f:close() return true end
+    return false
+   end
+   local gb_rules = {
+    [1] = function() return 10 end,
+    [2] = function() return (G.booster_pack_sparkles and not G.booster_pack_sparkles.REMOVED) and 11 or false end,
+    [3] = function() return (G.booster_pack_meteors and not G.booster_pack_meteors.REMOVED) and 11 or false end,
+    [4] = function() return (G.shop and not G.shop.REMOVED) and 11 or false end,
+    [5] = function() return (G.GAME and G.GAME.blind and G.GAME.blind.boss) and 11 or false end,
+   }
+   local before = #SMODS.Sound.obj_buffer
+   for i = 1, 5 do
+    local file = 'gb_music' .. i .. '.ogg'
+    if gb_file_exists(file) then
+     SMODS.Sound({
+      vol = 0.35,
+      pitch = 1,
+      key = 'gb_music' .. i,
+      path = file,
+      path_mod = grabbag_mod, -- read the audio from Grab Bag's own assets/sounds folder
+      select_music_track = function()
+       if G.SETTINGS.music_selection ~= 'grabbag' then return false end
+       return gb_rules[i]()
+      end,
+     })
+    end
+   end
+   local members = {}
+   for i = before + 1, #SMODS.Sound.obj_buffer do
+    local track_key = SMODS.Sound.obj_buffer[i]
+    if type(track_key) == 'string' and string.find(track_key, 'music') then
+     members[track_key] = true
+     grabbag_tracks[#grabbag_tracks + 1] = track_key
+    end
+   end
+   for track_key in pairs(members) do MUSEL_PACK_OF[track_key] = members end -- the 64-voice fix groups them like our packs
   end
  end
  if #grabbag_tracks > 0 then

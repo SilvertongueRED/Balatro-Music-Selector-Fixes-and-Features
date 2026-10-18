@@ -75,8 +75,12 @@ The mod allows to [add custom music](#how-to-add-your-own-music) as well.
 <sup>🔧 Otherwise, being able to at least override its music selector with this one.</sup>
 
 
+## 1.3.1 - Grab Bag OST shows up even with Grab Bag's Custom Music off
+- Fix: **Grab Bag OST - ViperDemon** was missing from the Soundtrack cycler when Grab Bag's own "Custom Music" setting was off, because Grab Bag then registers no music at all. The option now appears whenever Grab Bag is installed and enabled.
+- If you pick it while Grab Bag's Custom Music is off, this mod plays the same five tracks straight from Grab Bag's folder (still no audio copied).
+
 ## 1.3.0 - Grab Bag OST
-- New soundtrack option: **Grab Bag OST - ViperDemon**. It appears in the Soundtrack cycler when the Grab Bag mod is installed and its "Custom Music" setting is on.
+- New soundtrack option: **Grab Bag OST - ViperDemon**. It appears in the Soundtrack cycler when the Grab Bag mod is installed (from 1.3.1 on this works with Grab Bag's Custom Music on or off).
 - Before, Grab Bag's music played whenever its own checkbox was on and overrode whichever soundtrack you picked here. Now it only plays while **Grab Bag OST** is the selected soundtrack (so the other soundtracks, and the Balatro OST, play normally again).
 - No Grab Bag audio is copied into this mod. It uses the files from the Grab Bag mod itself.
 
