@@ -35,6 +35,7 @@ The mod allows to [add custom music](#how-to-add-your-own-music) as well.
 <sup>↳ [YouTube](https://www.youtube.com/@RecycledScraps)</sup><br>
 ❇️ Alternative Soundtrack by Hoverman ([standalone mod](https://github.com/hocermanc/balatro_alt_music)) - all 16 tracks, ante-based switching kept<br>
 ❇️ Cryptid OST by the Cryptid team ([Cryptid mod](https://github.com/SpectralPack/Cryptid)) - all 7 music tracks (menu themes, Code, Jimball, Big, Exotic)<br>
+❇️ Grab Bag OST by ViperDemon (music of the Grab Bag mod by Th30ne) - not copied: listed as an option when the Grab Bag mod is installed with its Custom Music setting on<br>
 ❇️ [Monkey Business](https://www.youtube.com/watch?v=V3ps8wvrmxw) by Bombaflex<br>
  <sup>↳ [YouTube](https://www.youtube.com/@bombaflex2383) | [Spotify](https://open.spotify.com/intl-it/artist/1rL5Ni1ym91shGIswrLhdu) | [Instagram](https://imginn.com/elbombaflex) | [GitHub](https://github.com/Bombaflex) | [Portfolio](https://jbombaron.wixsite.com/bombaflex-portfolio)</sup><br>
 ❇️ [Raise The Stakes](https://www.youtube.com/watch?v=p6TGmmQ_Fj4) by JohnathanSucks ([standalone mod](https://github.com/JohnathanSucks/Raise-The-Stakes))<br>
@@ -73,6 +74,11 @@ The mod allows to [add custom music](#how-to-add-your-own-music) as well.
 🔧 Make an injector for the Cardsauce mod in order to feature extra tracks even with Cardsauce installed.<br>
 <sup>🔧 Otherwise, being able to at least override its music selector with this one.</sup>
 
+
+## 1.3.0 - Grab Bag OST
+- New soundtrack option: **Grab Bag OST - ViperDemon**. It appears in the Soundtrack cycler when the Grab Bag mod is installed and its "Custom Music" setting is on.
+- Before, Grab Bag's music played whenever its own checkbox was on and overrode whichever soundtrack you picked here. Now it only plays while **Grab Bag OST** is the selected soundtrack (so the other soundtracks, and the Balatro OST, play normally again).
+- No Grab Bag audio is copied into this mod. It uses the files from the Grab Bag mod itself.
 
 ## 1.2.1 - Slowed Down Bonne Soirée + faster soundtrack switching
 - New soundtrack option: **Bonne Soirée (Slowed Down) - Vongola** (the same audio as Bonne Soirée, played at 0.7 speed/pitch; reuses the existing audio files, so no extra disk space).

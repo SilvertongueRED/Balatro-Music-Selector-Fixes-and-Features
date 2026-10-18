@@ -97,6 +97,34 @@ do = closes the loop statement. Everything beyond this, up to "end", will run in
  end -- This ends "if not".
 end -- This ends the loop.
 
+-- GRAB BAG OST (hooked in) ---------------------------------------------------------------------
+-- Grab Bag ships its own soundtrack (5 tracks, made by ViperDemon) and plays it whenever Grab Bag's own
+-- "Custom Music" checkbox is on, no matter which soundtrack is picked here. That overrode every soundtrack of this mod.
+-- Instead of copying its audio, we list it as an option and only let its tracks play while it is the selected one.
+-- The option only appears when Grab Bag is installed and its Custom Music setting is on (otherwise it has no tracks).
+if not cardsauce_detected then
+ local grabbag_tracks = {}
+ for _, track_key in ipairs(SMODS.Sound.obj_buffer) do
+  local snd = SMODS.Sounds[track_key]
+  if type(track_key) == 'string' and string.find(track_key, 'music') and snd and snd.mod and snd.mod.id == 'GrabBag'
+   and type(snd.select_music_track) == 'function' and not snd.musel_gated then
+   local original_select = snd.select_music_track
+   snd.select_music_track = function(self, ...)
+    if G.SETTINGS.music_selection ~= 'grabbag' then return false end -- not picked here: stay silent
+    return original_select(self, ...) -- picked: Grab Bag's own rules (menu, packs, shop, boss)
+   end
+   snd.musel_gated = true
+   grabbag_tracks[#grabbag_tracks + 1] = track_key
+  end
+ end
+ if #grabbag_tracks > 0 then
+  music_nums['grabbag'] = next_music_num_id[1]
+  table.insert(music_vals_list, 'grabbag')
+  pack_display_names['grabbag'] = "Grab Bag OST - ViperDemon"
+  next_music_num_id[1] = next_music_num_id[1] + 1
+ end
+end
+
 -- LOST EDITION OST (baked in) ------------------------------------------------------------------
 -- Lost Edition ships its own soundtrack (its tracks only play while G.SETTINGS.music_selection == "losted").
 -- Instead of letting Lost Edition draw a second, separate "Soundtrack" cycler (whose options were in a
